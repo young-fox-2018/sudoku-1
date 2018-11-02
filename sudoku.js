@@ -38,41 +38,40 @@ class Sudoku {
 
         if (this.board[rows][column] == 0) {
           while (!boxSafe && !columnSafe && !rowSafe) {
-              rowSafe = this.checkRows(column, numberToPut)
-              columnSafe = this.checkColumn(rows,  numberToPut) 
-              boxSafe = this.checkBox(rows, column, numberToPut)
-  
-              if (rowSafe && columnSafe && boxSafe) {
-                this.board[rows][column] = numberToPut 
-                rowSafe = true
-                columnSafe = true      
-                boxSafe = true 
+            rowSafe = this.checkRows(column, numberToPut)
+            columnSafe = this.checkColumn(rows,  numberToPut) 
+            boxSafe = this.checkBox(rows, column, numberToPut)
 
-                obj.rows = rows
-                obj.column = column
-                obj.value = numberToPut
-                savedPosition.push(obj)
-               } else if (numberToPut == 9) {
-                this.board[rows][column] = 0
-                numberToPut = 0
-                rows = savedPosition[savedPosition.length - 1].rows
-                column = savedPosition[savedPosition.length - 1].column
-                numberToPut = savedPosition[savedPosition.length - 1].value
-                this.board[rows][column] = numberToPut
-                savedPosition.pop()
+            if (rowSafe && columnSafe && boxSafe) {
+              this.board[rows][column] = numberToPut 
+              rowSafe = true
+              columnSafe = true      
+              boxSafe = true 
 
-                rowSafe = false
-                columnSafe = false
-                boxSafe = false
-              } else if(!rowSafe || !columnSafe || !boxSafe) {               
-                rowSafe = false
-                columnSafe = false
-                boxSafe = false
-                numberToPut += 1
-              }
+              obj.rows = rows
+              obj.column = column
+              obj.value = numberToPut
+              savedPosition.push(obj)
+            } else if (numberToPut == 9) {
+              this.board[rows][column] = 0
+              numberToPut = 0
+              rows = savedPosition[savedPosition.length - 1].rows
+              column = savedPosition[savedPosition.length - 1].column
+              numberToPut = savedPosition[savedPosition.length - 1].value
+              this.board[rows][column] = numberToPut
+              savedPosition.pop()
+
+              rowSafe = false
+              columnSafe = false
+              boxSafe = false
+            } else {               
+              rowSafe = false
+              columnSafe = false
+              boxSafe = false
+              numberToPut += 1
+            }
           }
-        }
-        
+        }     
         rowSafe = false
         columnSafe = false
         boxSafe = false
