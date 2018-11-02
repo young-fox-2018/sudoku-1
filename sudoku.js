@@ -3,6 +3,7 @@
 class Sudoku {
   constructor(board_string) {
     this.board = this.generateBoard(board_string);
+    this.zeroMap = []
 
   }
 
@@ -52,15 +53,36 @@ class Sudoku {
       for(let j = 0 ; j < this.board[i].length; j++){
 
         if(this.board[i][j] === 0){
+          let placed = false;
 
           for(let k = 1; k <= 9; k++){
+            // console.log(k, i, j)
+            // console.log(this.horizontalValidation(i, k) === true)
+            // console.log(this.verticalValidation(j, k) === true)
+            // console.log(this.gridValidation(i, j, k) === true)
             if (this.horizontalValidation(i, k) === true && this.verticalValidation(j, k) === true && this.gridValidation(i, j, k)){
-              this.board[i][j] = k
+              this.board[i][j] = k;
+              this.zeroMap.push({
+                y: i,
+                x: j,
+                value: k
+              })
+              placed = true;
+              break
+            }
+            if(placed === false && k >= 9 ){
+              ///harus disetel 0 dulu PENTING !!!!!!
+              this.board[i][j] = 0;
+              i = this.zeroMap[this.zeroMap.length-1]["y"];
+              j = this.zeroMap[this.zeroMap.length-1]["x"];
+              k = this.zeroMap[this.zeroMap.length-1]["value"]  // k = 7;
+              this.zeroMap.pop()
             }
           }
         }
       }
     }
+    return this.board
   }
   
   // Returns a string representing the current state of the board
@@ -74,6 +96,10 @@ class Sudoku {
       result.push(cont)
     }
     return result
+  }
+
+  printBoard(){
+    console.log(this.board)
   }
 }
 
@@ -89,11 +115,13 @@ var game = new Sudoku(board_string)
 // Remember: this will just fill out what it can and not "guess"
 // game.solve()
 
-console.log(game)
+game.printBoard()
 game.solve()
-console.log(game)
+game.printBoard()
 
-game.gridValidation(6,5,"")
+// console.log(game.zeroMap[game.zeroMap.length-1]["y"])
+
+
 
 
 //simpen coordinat 0
