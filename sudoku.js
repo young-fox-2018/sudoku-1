@@ -31,36 +31,40 @@ class Sudoku {
       let rowSafe = false
       let columnSafe = false
       let boxSafe = false
-      // nebak angka 1 - 9
+   
       for (let column = 0; column < this.board[rows].length; column++) {
         let obj = {}
+        numberToPut = 1
+
         if (this.board[rows][column] == 0) {
           while (!boxSafe && !columnSafe && !rowSafe) {
-              rowSafe = this.checkRows(rows, column, numberToPut)
-              columnSafe = this.checkColumn(rows, column, numberToPut) 
+              rowSafe = this.checkRows(column, numberToPut)
+              columnSafe = this.checkColumn(rows,  numberToPut) 
               boxSafe = this.checkBox(rows, column, numberToPut)
   
               if (rowSafe && columnSafe && boxSafe) {
-                this.board[rows][column] =  numberToPut 
+                this.board[rows][column] = numberToPut 
                 rowSafe = true
                 columnSafe = true      
                 boxSafe = true 
+
                 obj.rows = rows
                 obj.column = column
                 obj.value = numberToPut
                 savedPosition.push(obj)
-              } else if (numberToPut >= 9) {
+               } else if (numberToPut == 9) {
                 this.board[rows][column] = 0
+                numberToPut = 0
                 rows = savedPosition[savedPosition.length - 1].rows
                 column = savedPosition[savedPosition.length - 1].column
-                numberToPut = savedPosition[savedPosition.length - 1].value + 1
+                numberToPut = savedPosition[savedPosition.length - 1].value
                 this.board[rows][column] = numberToPut
                 savedPosition.pop()
 
                 rowSafe = false
                 columnSafe = false
                 boxSafe = false
-              } else {
+              } else if(!rowSafe || !columnSafe || !boxSafe) {               
                 rowSafe = false
                 columnSafe = false
                 boxSafe = false
@@ -68,10 +72,10 @@ class Sudoku {
               }
           }
         }
+        
         rowSafe = false
         columnSafe = false
         boxSafe = false
-        numberToPut = 1
       }
     }
   }
@@ -79,79 +83,50 @@ class Sudoku {
   checkBox(rows, column, numberToPut) {
     let initialRow = 3  * Math.floor(rows / 3)
     let initialColumn = 3 * Math.floor(column / 3) 
-    let occurance = 0
 
     for (let i = initialRow; i <= initialRow + 2; i++) {
       for (let j = initialColumn; j <= initialColumn + 2; j++) {
         if (this.board[i][j] == numberToPut) {
-           occurance++
-           break
+           return false
         }
       }
-  
-      if (occurance == 1) {
-        break
-      }
     }
-
-    if (occurance > 0) {
-      return false
-    } else {
-      return true
-    }
+      
+    return true
   }
 
-  checkRows(rows, column, numberToPut) {
-    let botSafe = false
-    let topSafe = false
+  checkRows(column, numberToPut) {
+    let rowSafe = false
 
-    for (let i = rows; i < this.boardY; i++) {
+    for (let i = 0; i < this.boardY; i++) {
       if (this.board[i][column] != numberToPut) {
-        botSafe = true
+        rowSafe = true
       } else {
-        botSafe = false
+        rowSafe = false
         break
       }
     }
 
-    for (let i = rows; i >= 0; i--) {
-      if (this.board[i][column] != numberToPut) {
-        topSafe = true
-      } else {
-        topSafe = false
-        break
-      }
-    }
-    if (botSafe && topSafe) {
+    if (rowSafe) {
       return true
     } else {
       return false
     }
   }
 
-  checkColumn(rows, column, numberToPut) {
-    let rightSafe = false
-    let leftSafe = false
+  checkColumn(rows, numberToPut) {
+   let sideSafe = 0
 
-    for (let i = column; i < this.boardX; i++) {
+    for (let i = 0; i < this.boardX; i++) {
       if (this.board[rows][i] != numberToPut) {
-        rightSafe = true
+        sideSafe = true
       } else {
-        rightSafe = false
+        sideSafe = false
         break
       }
     }
 
-    for (let i = column; i >= 0; i--) {
-      if (this.board[rows][i] != numberToPut) {
-        leftSafe = true
-      } else {
-        leftSafe = false
-        break
-      }
-    }
-
-    if (rightSafe && leftSafe) {
+    if (sideSafe) {
       return true
     } else {
       return false
@@ -172,7 +147,7 @@ class Sudoku {
 var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
   .toString()
-  .split("\n")[0]
+  .split("\n")[13]
 
 var game = new Sudoku(board_string)
 game.createBoard()
