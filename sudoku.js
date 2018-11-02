@@ -54,7 +54,6 @@ class Sudoku {
               savedPosition.push(obj)
             } else if (numberToPut == 9) {
               this.board[rows][column] = 0
-              numberToPut = 0
               rows = savedPosition[savedPosition.length - 1].rows
               column = savedPosition[savedPosition.length - 1].column
               numberToPut = savedPosition[savedPosition.length - 1].value
@@ -64,7 +63,7 @@ class Sudoku {
               rowSafe = false
               columnSafe = false
               boxSafe = false
-            } else {               
+             } else {               
               rowSafe = false
               columnSafe = false
               boxSafe = false
@@ -146,7 +145,7 @@ class Sudoku {
 var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
   .toString()
-  .split("\n")[13]
+  .split("\n")[0]
 
 var game = new Sudoku(board_string)
 game.createBoard()
