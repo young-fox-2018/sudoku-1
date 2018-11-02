@@ -10,7 +10,7 @@ class Sudoku {
   solve() {
     var papan = this._board
     var blank = this._koordinat
-    console.log(blank)
+    // console.log(blank)
     for (let i = 0; i < blank.length; i++) {
       let isTrue = false
       for (let j = 1; j <= papan.length; j++) {
@@ -24,8 +24,8 @@ class Sudoku {
           i--
           j = blank[i].value - 1
         }
-        console.log(papan)
       }
+      console.log(papan)
     }
     // return papan
   }
