@@ -9,10 +9,12 @@ class Sudoku {
   cekGrid(obj){
       let startX = 3 * Math.floor(obj.x/3)
       let endX = startX + 2
-      //debug console.log("STARTX"+startX+""+endX)
+      //debug 
+    //   console.log("STARTX"+startX+""+endX)
       let startY = 3 * Math.floor(obj.y/3)
       let endY = startY + 2
-      //debug console.log("STARTX"+startY+""+endY)
+      //debug 
+    //   console.log("STARTY"+startY+""+endY)
       
       for( let i = startX; i <= endX; i++){
           for(let j = startY; j <= endY; j++){
@@ -69,17 +71,20 @@ class Sudoku {
                   y: j,
                   value: 0
               }
-              if(this.boards[i][j] == 0){
+              if(this.boards[i][j] === 0){
                   this.arrObj.push(obj)
-                  // debug console.log(this.arrObj)
+                  // debug 
+                  console.log("PUSH OBJ",obj)
 
                   if(this.cekVHG(this.arrObj) === true){
-                      // debug console.log("LAST",this.arrObj[this.arrObj.length - 1])
+                      // debug 
                       let lastObj = this.arrObj[this.arrObj.length - 1]
-                      this.boards[lastObj.x][lastObj.y] = obj.value
+                      console.log("cek true, LAST",lastObj)
+                      this.boards[lastObj.x][lastObj.y] = lastObj.value
                       i = lastObj.x
                       j = lastObj.y
-                      // debug console.log("new init: "+i+"-"+j)
+                      // debug 
+                      console.log("\n"+"new init: "+i+"-"+j)
                   }
               }
           }
@@ -92,7 +97,8 @@ class Sudoku {
   //----cek vertical, horizontal, grid-----
   cekVHG(arrObjk){ 
       var lastElmt = arrObjk[arrObjk.length-1]
-      // debug console.log(lastElmt)
+      // debug 
+      console.log("Last ELmt",lastElmt)
       lastElmt.value += 1
 
       while(!this.cekHorizontal(lastElmt) || !this.cekVertical(lastElmt) || !this.cekGrid(lastElmt)){
@@ -110,8 +116,12 @@ class Sudoku {
 
   //----backtrack----
   cekback(arrObjk){ 
+      let lastEl = arrObjk[arrObjk.length-1]
+      console.log("pop:",lastEl)
+      this.boards[lastEl.x][lastEl.y] = 0
       arrObjk.pop() // delete last objeck in array
-      
+    //   console.log("setelah pop")
+    //   console.log(arrObjk)
       if(this.cekVHG(arrObjk)===true){
           return true
       } else {
@@ -128,7 +138,9 @@ class Sudoku {
       return this.boards
   }
 }
-
+//0 === 105802000 090076405 200400819 019007306 762083090 000061050 007600030 430020501 600308900
+//4 === 290500007 700000400 004738012 902003064 800050070 500067200 309004005 000080700 087005109
+//6 === 608730000 200000460 000064820 080005701 900618004 031000080 860200039 050000100 100456200
 
 var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
@@ -137,4 +149,5 @@ var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
 
 //NEW GAME
 var game = new Sudoku(board_string)
+// console.log(game.board())
 game.solve()
