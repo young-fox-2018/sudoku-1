@@ -4,7 +4,9 @@ module.exports = function emptyData(board) {
       for (let j = 0; j < board.length; j++) {
         let obj = {}
         if (board[i][j] === 0) {
-          obj.coordinate = [i, j]
+          obj.coordinate = []
+          obj.coordinate.push(i)
+          obj.coordinate.push(j)
           obj.value = 0
           data.push(obj)
         }

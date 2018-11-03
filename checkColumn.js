@@ -1,19 +1,19 @@
 class Columns {
-    static checkColumns(board, coordinate) {
-        let x = coordinate[0]
-        let y = coordinate[1]
-        let count = 0
-        for (let i = 0; i < board.length; i++) {
-            if (board[x][y] === board[i][y] ) {
-                count++
-            }
+    static checkColumns(board, coordinate, value) {
+      let x = coordinate[0]
+      let y = coordinate[1]
+      let count = 0
+      for (let i = 0; i < board.length; i++) {
+        if (value === board[i][y]) {
+          count++
         }
-        if (count > 1) {
-            return false
-        }
-        return true
+      }
+      if (count >= 1) {
+        return false
+      }
+      return true
     }
-}
+  }
 
 // let tes = Columns.checkColumns([[1, 2, 3],
 //                                 [2, 3, 3],
