@@ -5,11 +5,6 @@ class Sudoku {
       this.arrObj = []
   }
 
-  cek(obj){
-      console.log(obj.x)
-      console.log(obj.y)
-      console.log(obj.value)
-  }
   cekGrid(obj){
       let startX = 3 * Math.floor(obj.x/3)
       let endX = startX + 2
@@ -61,7 +56,7 @@ class Sudoku {
 
   solve(){
       let papan = this.board()
-      console.log("--------------------Board Awal--------------------")
+      console.log("-----------Board Awal-----------")
       console.log(papan)
 
       for( let i = 0; i < 9; i++){
@@ -73,36 +68,27 @@ class Sudoku {
               }
               if(this.boards[i][j] == 0){
                   this.arrObj.push(obj)
-                  console.log("")
-                  console.log(this.arrObj)
-                  // if(this.cekVHG(this.arrObj) !== true){
-                  //     i = this.arrObj[this.arrObj.length - 1].x
-                  //     j = this.arrObj[this.arrObj.length - 1].y
-                  //     console.log(`cek sebelum ${i}-${j}`)
-                  // } else {
-                  //     this.boards[this.arrObj[this.arrObj.length - 1].x][this.arrObj[this.arrObj.length - 1].y] = (obj.value + "")
-                  //     i = this.arrObj[this.arrObj.length - 1].x
-                  //     j = this.arrObj[this.arrObj.length - 1].y
-                  // }
+                  // console.log("")
+                  // console.log(this.arrObj)
+
                   if(this.cekVHG(this.arrObj) === true){
-                      console.log("LAST",this.arrObj[this.arrObj.length - 1])
+                      // console.log("LAST",this.arrObj[this.arrObj.length - 1])
                       let lastObj = this.arrObj[this.arrObj.length - 1]
                       this.boards[lastObj.x][lastObj.y] = obj.value
                       i = lastObj.x
                       j = lastObj.y
-                      console.log("init"+i+"-"+j)
+                      // console.log("init"+i+"-"+j)
                   }
               }
           }
       }
 
-      console.log("\n" + "Board Akhir")
+      console.log("\n" + "-----------Board Akhir-----------")
       console.log(this.final())
-      // return this.boards
-      // console.log(this.boards)
   }
 
-  cekVHG(arrObjk){ //cek vertical, horizontal, grid
+  //----cek vertical, horizontal, grid-----
+  cekVHG(arrObjk){ 
       var lastElmt = arrObjk[arrObjk.length-1]
       // console.log(lastElmt)
       lastElmt.value += 1
@@ -110,22 +96,19 @@ class Sudoku {
       while(!this.cekHorizontal(lastElmt) || !this.cekVertical(lastElmt) || !this.cekGrid(lastElmt)){
           lastElmt.value += 1
       }
-      // console.log(lastElmt)
 
       if(lastElmt.value === 10){
           lastElmt.value = 0
           this.boards[lastElmt.x][lastElmt.y] = 0
-          return this.cekback(arrObjk) //return false / ulang
+          return this.cekback(arrObjk) // ulang backtrack
       } else {
-          // console.log(lastElmt)
           return true //lanjut
       }     
   }
 
-  cekback(arrObjk){ //backtrack
+  //----backtrack----
+  cekback(arrObjk){ 
       arrObjk.pop()
-      // return (arrObjk[arrObjk.length - 1])
-      // return this.cekVHG(arrObjk)
       
       if(this.cekVHG(arrObjk)===true){
           return true
@@ -134,15 +117,14 @@ class Sudoku {
       }
   }
 
+  //----print final board----
   final(){
       for(let i = 0; i < this.arrObj.length; i++){
           var element = this.arrObj[i]
           this.boards[element.x][element.y] = element.value
       }
-
       return this.boards
   }
-
 }
 
 
@@ -153,27 +135,4 @@ var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
 
 //NEW GAME
 var game = new Sudoku(board_string)
-
-// Remember: this will just fill out what it can and not "guess"
-
-// console.log(game.board())
-// console.log(game.cekVertical({ x: 1, y: 7, value: 1 }))
-// console.log(game.cekHorizontal({ x: 1, y: 7, value: 5 }))
-// console.log(game.cekGrid({ x: 1, y: 7, value: 9 }))
-// console.log(game.cek({ x: 0, y: 1, value: 9 }))
-// console.log(game.cekVHG([{ x: 0, y: 1, value: 9 },{ x: 1, y: 7, value: 5 }]))
-
-
-console.log(game.solve())
-
-
-
-// var input = [ 
-//     { x: 0, y: 1, value: 4 },
-//     { x: 0, y: 4, value: 3 },
-//     { x: 0, y: 6, value: 9 },
-//     { x: 0, y: 7, value: 9 },
-//     { x: 0, y: 8, value: 9 } 
-// ]
-// console.log(game.board())
-// console.log(game.cekVHG(input))
+game.solve()
