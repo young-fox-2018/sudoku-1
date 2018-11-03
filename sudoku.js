@@ -1,24 +1,153 @@
-"use strict"
-
 class Sudoku {
-  constructor(board_string) {}
+  constructor(board_string) {
+      this.character = board_string
+      this.boards = []
+      this.arrObj = []
+  }
 
-  solve() {}
+  // --- cek board 3x3 ---
+  cekGrid(obj){
+      let startX = 3 * Math.floor(obj.x/3)
+      let endX = startX + 2
+      //debug 
+    //   console.log("STARTX"+startX+""+endX)
+      let startY = 3 * Math.floor(obj.y/3)
+      let endY = startY + 2
+      //debug 
+    //   console.log("STARTY"+startY+""+endY)
+      
+      for( let i = startX; i <= endX; i++){
+          for(let j = startY; j <= endY; j++){
+              if(obj.value === this.boards[i][j]){
+                  return false
+              }
+          }
+      }
+      return true
+  }
 
-  // Returns a string representing the current state of the board
-  board() {}
+  cekVertical(obj){
+      for(let i = 0; i < 9; i++){
+          if(obj.value === this.boards[i][obj.y]){
+              return false
+          }
+      }
+      return true
+  }
+
+  cekHorizontal(obj){
+      for(let j = 0; j < 9; j++){
+          if(obj.value === this.boards[obj.x][j]){
+              return false
+          }
+      }
+      return true
+  }
+
+  //----just for generate initial board----
+  board(){
+      let count = 0
+      for(let i = 0; i < 9; i++){
+        let arrRow = []
+        for(let j = 0; j < 9; j++){
+          arrRow.push(Number(this.character[count]))
+          count++
+        }
+        this.boards.push(arrRow)
+      }
+      return this.boards
+  }
+
+  // ---- change the 0 value inside board ---
+  solve(){
+      let papan = this.board() //call board function to generate sudoku board
+      console.log("-----------Board Awal-----------")
+      console.log(papan)
+
+      for( let i = 0; i < 9; i++){
+          for(let j = 0; j < 9; j++){
+              let obj = {
+                  x: i,
+                  y: j,
+                  value: 0
+              }
+              if(this.boards[i][j] === 0){
+                  this.arrObj.push(obj)
+                  // debug 
+                  console.log("PUSH OBJ",obj)
+
+                  if(this.cekVHG(this.arrObj) === true){
+                      // debug 
+                      let lastObj = this.arrObj[this.arrObj.length - 1]
+                      console.log("cek true, LAST",lastObj)
+                      this.boards[lastObj.x][lastObj.y] = lastObj.value
+                      i = lastObj.x
+                      j = lastObj.y
+                      // debug 
+                      console.log("\n"+"new init: "+i+"-"+j)
+                  }
+              }
+          }
+      }
+
+      console.log("\n" + "-----------Board Akhir-----------")
+      console.log(this.final())
+  }
+
+  //----cek vertical, horizontal, grid-----
+  cekVHG(arrObjk){ 
+      var lastElmt = arrObjk[arrObjk.length-1]
+      // debug 
+      console.log("Last ELmt",lastElmt)
+      lastElmt.value += 1
+
+      while(!this.cekHorizontal(lastElmt) || !this.cekVertical(lastElmt) || !this.cekGrid(lastElmt)){
+          lastElmt.value += 1
+      }
+
+      if(lastElmt.value === 10){
+          lastElmt.value = 0
+          this.boards[lastElmt.x][lastElmt.y] = 0
+          return this.cekback(arrObjk) // repeat backtrack until true
+      } else {
+          return true // lanjut / next step
+      }     
+  }
+
+  //----backtrack----
+  cekback(arrObjk){ 
+      let lastEl = arrObjk[arrObjk.length-1]
+      console.log("pop:",lastEl)
+      this.boards[lastEl.x][lastEl.y] = 0
+      arrObjk.pop() // delete last objeck in array
+    //   console.log("setelah pop")
+    //   console.log(arrObjk)
+      if(this.cekVHG(arrObjk)===true){
+          return true
+      } else {
+          return this.cekVHG(arrObjk) // repeat check Vertical,Horizontal,Grid of last objeck in array
+      }
+  }
+
+  //----print final board----
+  final(){
+      for(let i = 0; i < this.arrObj.length; i++){
+          var element = this.arrObj[i]
+          this.boards[element.x][element.y] = element.value
+      }
+      return this.boards
+  }
 }
+//0 === 105802000 090076405 200400819 019007306 762083090 000061050 007600030 430020501 600308900
+//4 === 290500007 700000400 004738012 902003064 800050070 500067200 309004005 000080700 087005109
+//6 === 608730000 200000460 000064820 080005701 900618004 031000080 860200039 050000100 100456200
 
-// The file has newlines at the end of each line,
-// so we call split to remove it (\n)
 var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
-  .toString()
-  .split("\n")[0]
+.toString()
+.split("\n")[0]
 
+//NEW GAME
 var game = new Sudoku(board_string)
-
-// Remember: this will just fill out what it can and not "guess"
+// console.log(game.board())
 game.solve()
-
-console.log(game.board())
