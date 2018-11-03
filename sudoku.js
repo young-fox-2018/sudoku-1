@@ -46,7 +46,7 @@ class Sudoku {
           let obj =  {
             x : i,
             y : j,
-            value : board[i][j]
+            value : 1
           }
           this.kosong.push(obj)
         }
@@ -60,56 +60,25 @@ class Sudoku {
     let daftarKosong = this.checkKosong(this.arrBoard)
     console.log(this.arrBoard)
     for(let i = 0; i < daftarKosong.length; i++) {
-        console.log(daftarKosong[i])
-        if(this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] == '0') {
-          let status = false
-          var k = 1
-          while(k <= 9 && status === false) {
-            console.log(`salah di k ${k}`)
-            console.log(daftarKosong[i])
-            console.log(daftarKosong[i].x)
-            let checkRow = this.checkHorizontal(daftarKosong[i].x,k) 
-            let checkCol =  this.checkVertical(daftarKosong[i].y,k)
-            let checkGrid = this.checkBox(daftarKosong[i].x,daftarKosong.y,k)
-            if(checkRow === true && checkCol === true && checkGrid === true) {
-              this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] = String(k)
-              this.kosong[i].value = String(k)
-              status = true
-            } else if( k == 9 && status === false ) {
-              i -= 1
-            }else {
-              k++
-            }
-          }
-          console.log(this.arrBoard)
+
+      while(true) {
+        if(this.checkHorizontal(daftarKosong[i].x, daftarKosong[i].value)  &&  this.checkVertical(daftarKosong[i].y, daftarKosong[i].value)  && this.checkBox(daftarKosong[i].x, daftarKosong[i].y, daftarKosong[i].value) ) {
+            this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] = daftarKosong[i].value
+            break;
         }else {
-          let status = false
-          let startPoin = this.kosong[i].value
-          var k  = Number(startPoin)
-          console.log('ini')
-          while(k <= 9 && status === false) {
-            console.log('ini2')
-            console.log(this.kosong[i])
-            // console.log(`salah di k ${k}`)
-            let checkRow = this.checkHorizontal(daftarKosong[i].x,k) 
-            let checkCol =  this.checkVertical(daftarKosong[i].y,k)
-            let checkGrid = this.checkBox(daftarKosong[i].x,daftarKosong.y,k)
-            if(checkRow === true && checkCol === true && checkGrid === true) {
-              this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] = String(k)
-              this.kosong[i].value = String(k)
-              status = true
-            } else if( i == 9 && status === false ) {
-              i -= 1
-              this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] = '0'
-              this.kosong[i].value = '0'
-            }else {
-              k++
-            }
-          }
-          console.log(this.arrBoard)
+          daftarKosong[i].value += 1
         }
+      }
+
+      if(daftarKosong[i].value > 9) {
+        daftarKosong[i]["value"] = 0
+        this.arrBoard[daftarKosong[i]["x"]] [daftarKosong[i]["y"]] = daftarKosong[i]["value"]
+        i -= 2
+      }
+
     }
   }
+
   createBoard() {
     for (let i = 0; i < this.sudokuBoard.length-1; i+=9) {
       var baris = this.sudokuBoard.slice(i,i+9).split('')
