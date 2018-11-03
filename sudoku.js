@@ -39,40 +39,75 @@ class Sudoku {
     return true
   }
 
-  checkKosong() {
-    for(let i = 0; i < this.arrBoard.length; i++){
-      for(let j = 0; j < this.arrBoard.length; j++) {
-        if(this.arrBoard[i][j] === '0') {
+  checkKosong(board) {
+    for(let i = 0; i < board.length; i++){
+      for(let j = 0; j < board.length; j++) {
+        if(board[i][j] === '0') {
           let obj =  {
             x : i,
             y : j,
-            value : this.arrBoard[i][j]
+            value : board[i][j]
           }
+          this.kosong.push(obj)
         }
       }
     }
+    return this.kosong
   }
 
   solve() {
     // console.log(this.arrBoard)
-    for(let i = 0; i < this.arrBoard.length; i++) {
-      for(let j = 0; j < this.arrBoard[i].length; j++) {
-        if(this.arrBoard[i][j] === '0') {
+    let daftarKosong = this.checkKosong(this.arrBoard)
+    console.log(this.arrBoard)
+    for(let i = 0; i < daftarKosong.length; i++) {
+        console.log(daftarKosong[i])
+        if(this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] == '0') {
           let status = false
           var k = 1
           while(k <= 9 && status === false) {
-            let checkRow = this.checkHorizontal(i,k) 
-            let checkCol =  this.checkVertical(j,k)
-            let checkGrid = this.checkBox(i,j,k)
+            console.log(`salah di k ${k}`)
+            console.log(daftarKosong[i])
+            console.log(daftarKosong[i].x)
+            let checkRow = this.checkHorizontal(daftarKosong[i].x,k) 
+            let checkCol =  this.checkVertical(daftarKosong[i].y,k)
+            let checkGrid = this.checkBox(daftarKosong[i].x,daftarKosong.y,k)
             if(checkRow === true && checkCol === true && checkGrid === true) {
-              this.arrBoard[i][j] = String(k)
+              this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] = String(k)
+              this.kosong[i].value = String(k)
               status = true
-            } else {
+            } else if( k == 9 && status === false ) {
+              i -= 1
+            }else {
               k++
             }
           }
+          console.log(this.arrBoard)
+        }else {
+          let status = false
+          let startPoin = this.kosong[i].value
+          var k  = Number(startPoin)
+          console.log('ini')
+          while(k <= 9 && status === false) {
+            console.log('ini2')
+            console.log(this.kosong[i])
+            // console.log(`salah di k ${k}`)
+            let checkRow = this.checkHorizontal(daftarKosong[i].x,k) 
+            let checkCol =  this.checkVertical(daftarKosong[i].y,k)
+            let checkGrid = this.checkBox(daftarKosong[i].x,daftarKosong.y,k)
+            if(checkRow === true && checkCol === true && checkGrid === true) {
+              this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] = String(k)
+              this.kosong[i].value = String(k)
+              status = true
+            } else if( i == 9 && status === false ) {
+              i -= 1
+              this.arrBoard[daftarKosong[i].x][daftarKosong[i].y] = '0'
+              this.kosong[i].value = '0'
+            }else {
+              k++
+            }
+          }
+          console.log(this.arrBoard)
         }
-      }
     }
   }
   createBoard() {
@@ -99,5 +134,5 @@ var game = new Sudoku(board_string)
 // Remember: this will just fill out what it can and not "guess"
 game.createBoard()
 game.solve()
-
 console.log(game.printBoard())
+// console.log(game.checkKosong())
