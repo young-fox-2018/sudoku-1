@@ -1,24 +1,42 @@
 "use strict"
+const fs = require('fs')
+const board_string = fs.readFileSync('./set-01_sample.unsolved.txt').toString().split("\n")[0]
+const Board = require('./generateBoard.js')
+const Rows = require('./checkRow.js').checkRows
+const Column = require('./checkColumn.js').checkColumns
+const Area = require('./checkArea.js').checkArea
+const sleep = require('./sleep.js')
+const emptyData = require('./emptyData.js')
+
+let sudokuBoard = Board.generateBoard(board_string)
+let data = emptyData(sudokuBoard)
 
 class Sudoku {
-  constructor(board_string) {}
-
-  solve() {}
-
-  // Returns a string representing the current state of the board
-  board() {}
+  solve() {
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 1; j <= 9; j++) {
+        let validate = false
+        if (Rows(sudokuBoard, data[i].coordinate, j) && Column(sudokuBoard, data[i].coordinate, j) && Area(sudokuBoard, data[i].coordinate, j)) {
+          sudokuBoard[data[i].coordinate[0]][data[i].coordinate[1]] = j
+          data[i].value = j
+          validate = true
+          break
+        }
+        else if (validate === false && j === 9) {
+          sudokuBoard[data[i].coordinate[0]][data[i].coordinate[1]] = 0
+          i--
+          j = data[i].value - 1
+        }
+      }
+      console.clear()
+      console.log(sudokuBoard)
+      sleep(150)
+    }
+  }
 }
 
-// The file has newlines at the end of each line,
-// so we call split to remove it (\n)
-var fs = require('fs')
-var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
-  .toString()
-  .split("\n")[0]
-
-var game = new Sudoku(board_string)
-
-// Remember: this will just fill out what it can and not "guess"
+let game = new Sudoku
 game.solve()
 
-console.log(game.board())
+module.exports = Sudoku
+
