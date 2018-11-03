@@ -5,13 +5,14 @@ class Sudoku {
       this.arrObj = []
   }
 
+  // --- cek board 3x3 ---
   cekGrid(obj){
       let startX = 3 * Math.floor(obj.x/3)
       let endX = startX + 2
-      // console.log("STARTX"+startX+""+endX)
+      //debug console.log("STARTX"+startX+""+endX)
       let startY = 3 * Math.floor(obj.y/3)
       let endY = startY + 2
-      // console.log("STARTX"+startY+""+endY)
+      //debug console.log("STARTX"+startY+""+endY)
       
       for( let i = startX; i <= endX; i++){
           for(let j = startY; j <= endY; j++){
@@ -41,6 +42,7 @@ class Sudoku {
       return true
   }
 
+  //----just for generate initial board----
   board(){
       let count = 0
       for(let i = 0; i < 9; i++){
@@ -54,8 +56,9 @@ class Sudoku {
       return this.boards
   }
 
+  // ---- change the 0 value inside board ---
   solve(){
-      let papan = this.board()
+      let papan = this.board() //call board function to generate sudoku board
       console.log("-----------Board Awal-----------")
       console.log(papan)
 
@@ -68,16 +71,15 @@ class Sudoku {
               }
               if(this.boards[i][j] == 0){
                   this.arrObj.push(obj)
-                  // console.log("")
-                  // console.log(this.arrObj)
+                  // debug console.log(this.arrObj)
 
                   if(this.cekVHG(this.arrObj) === true){
-                      // console.log("LAST",this.arrObj[this.arrObj.length - 1])
+                      // debug console.log("LAST",this.arrObj[this.arrObj.length - 1])
                       let lastObj = this.arrObj[this.arrObj.length - 1]
                       this.boards[lastObj.x][lastObj.y] = obj.value
                       i = lastObj.x
                       j = lastObj.y
-                      // console.log("init"+i+"-"+j)
+                      // debug console.log("new init: "+i+"-"+j)
                   }
               }
           }
@@ -90,7 +92,7 @@ class Sudoku {
   //----cek vertical, horizontal, grid-----
   cekVHG(arrObjk){ 
       var lastElmt = arrObjk[arrObjk.length-1]
-      // console.log(lastElmt)
+      // debug console.log(lastElmt)
       lastElmt.value += 1
 
       while(!this.cekHorizontal(lastElmt) || !this.cekVertical(lastElmt) || !this.cekGrid(lastElmt)){
@@ -100,20 +102,20 @@ class Sudoku {
       if(lastElmt.value === 10){
           lastElmt.value = 0
           this.boards[lastElmt.x][lastElmt.y] = 0
-          return this.cekback(arrObjk) // ulang backtrack
+          return this.cekback(arrObjk) // repeat backtrack until true
       } else {
-          return true //lanjut
+          return true // lanjut / next step
       }     
   }
 
   //----backtrack----
   cekback(arrObjk){ 
-      arrObjk.pop()
+      arrObjk.pop() // delete last objeck in array
       
       if(this.cekVHG(arrObjk)===true){
           return true
       } else {
-          return this.cekVHG(arrObjk)
+          return this.cekVHG(arrObjk) // repeat check Vertical,Horizontal,Grid of last objeck in array
       }
   }
 
