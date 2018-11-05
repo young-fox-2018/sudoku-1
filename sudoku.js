@@ -68,6 +68,7 @@ class Sudoku {
         }else {
           daftarKosong[i].value += 1
         }
+
       }
 
       if(daftarKosong[i].value > 9) {
@@ -97,11 +98,17 @@ var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
   .toString()
   .split("\n")[0]
-
+var board_string2 = fs.readFileSync('set-01_sample.unsolved.txt')
+  .toString()
+  .split("\n")[1]
 var game = new Sudoku(board_string)
+var game2 = new Sudoku(board_string2)
 
 // Remember: this will just fill out what it can and not "guess"
 game.createBoard()
 game.solve()
 console.log(game.printBoard())
 // console.log(game.checkKosong())
+game2.createBoard()
+game2.solve()
+console.log(game2.printBoard())
